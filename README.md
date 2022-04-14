@@ -1,7 +1,7 @@
 # Wordleclone
 
 Clone of worlde as a commandline app.
-set -word flag to set word for solution.
+set -show flag to see the chosen word.
 Uses https://dictionaryapi.dev/ api to check if guess words are valid.
 English words only. 
 
@@ -11,7 +11,7 @@ English words only.
 * cd wordleclone;
 
 ```bash
-go run main.go -word <your-word>
+go run main.go -show <true/false>
 ```
 
 

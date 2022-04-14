@@ -47,3 +47,18 @@ func TestCheckRightLetterWorngPos(t *testing.T) {
 
 	})
 }
+
+func TestSelectRandomWordFromFile(t *testing.T) {
+	word, err := selectRandomWordFromFile()
+
+	if err != nil {
+		t.Errorf("Produces error!" + err.Error())
+	}
+	if word == "" {
+		t.Errorf("Word is empty!")
+	}
+
+	if len(word) != 5 {
+		t.Errorf("Word is too long or short!")
+	}
+}

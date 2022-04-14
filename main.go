@@ -1,20 +1,31 @@
 package main
 
 import (
+	"bufio"
+	"crypto/rand"
 	"flag"
 	"fmt"
+	"log"
+	"math/big"
 	"net/http"
+	"os"
 )
 
 const dictionaryapi = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 
 func main() {
 
-	wordPtr := flag.String("word", "hello", "Word to guess")
+	showPtr := flag.Bool("show", false, "Show the chosen word")
 	flag.Parse()
 
-	word := *wordPtr
+	word, err := selectRandomWordFromFile()
+	if err != nil {
+		os.Exit(1)
+	}
 	var guess string
+	if *showPtr {
+		fmt.Println("The word is " + word)
+	}
 
 	printPos([]int{2, 2, 2, 2, 2}, "*****")
 	for {
@@ -50,6 +61,31 @@ func checkIfActualWord(word string) bool {
 		return false
 	}
 	return true
+}
+
+func selectRandomWordFromFile() (word string, err error) {
+
+	file, err := os.Open("dictionary.txt")
+	var words []string
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+
+	if err = scanner.Err(); err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	pos, err := rand.Int(rand.Reader, big.NewInt(int64(len(words))))
+	word = words[pos.Int64()]
+	return
 }
 
 func checkForWin(out []int) (won bool) {
